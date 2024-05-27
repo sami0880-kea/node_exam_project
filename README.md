@@ -1,6 +1,9 @@
 # Exam Project (Svelte & Node.js)
 ## LeasePortalen - En portal til at sælge biler uden dansk afgift
 
+![logo-light](https://github.com/sami0880-kea/node_exam_project/assets/113104513/58e85879-5f2a-407b-ae0f-c616e05ac483)
+
+
 ## Features
 
 - Login & Signup
