@@ -21,4 +21,6 @@ coverage
 # OS-specific
 .DS_Store
 
+server/uploads/*
+
 tmp
