@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint database/* middlewares/* routers/* util/* app.js"
+    "lint": "npx eslint './**/*.{js,svelte}'"
   },
   "author": "",
   "license": "ISC",

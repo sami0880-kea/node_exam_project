@@ -13,6 +13,7 @@
     import Contact from "./pages/Contact/Contact.svelte";
     import Messages from "./pages/Messages/Messages.svelte"; 
     import Inbox from "./pages/Inbox/Inbox.svelte"; 
+  import Footer from "./components/Footer/Footer.svelte";
 
     onMount(() => {
         fetchUser();
@@ -38,3 +39,4 @@
         <Messages id={params.id} />
     </PrivateRoute>
 </Router>
+<Footer/>
