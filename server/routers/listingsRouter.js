@@ -1,33 +1,14 @@
-import { Router } from 'express';
-import db from "../database/connection.js";
-import { ObjectId } from 'mongodb';
-import { verifyToken } from '../middlewares/authMiddleware.js';
-import fs from 'fs';
-import path from 'path';
+    import { Router } from 'express';
+    import db from "../database/connection.js";
+    import { ObjectId } from 'mongodb';
+    import { verifyToken } from '../middlewares/authMiddleware.js';
+    import fs from 'fs';
+    import path from 'path';
 
-const router = Router();
+    const router = Router();
 
-router.post('/api/listings', verifyToken, async (req, res) => {
-    const {
-        price,
-        brand,
-        model,
-        year,
-        fuel,
-        version,
-        automaticGear,
-        images,
-        color,
-        mileage,
-        power,
-        equipment,
-        exclusiveVAT,
-        description
-    } = req.body;
-    const userId = req.user._id;
-
-    try {
-        const newListing = {
+    router.post('/api/listings', verifyToken, async (req, res) => {
+        const {
             price,
             brand,
             model,
@@ -41,79 +22,113 @@ router.post('/api/listings', verifyToken, async (req, res) => {
             power,
             equipment,
             exclusiveVAT,
-            description,
-            userId: new ObjectId(userId)
-        }; 
-        await db.listings.insertOne(newListing);
-        res.status(201).send({ data: "Listing created" });
-    } catch (error) {
-        res.status(500).send({ data: error });
-    }
-});
- 
-router.get('/api/listings', async (req, res) => {
-    try {
-        const listings = await db.listings.find().toArray();
-        const modifiedListings = listings.map(listing => ({
-            ...listing,
-            images: (listing.images).length > 0 ? [listing.images[0]] : null
-        }));
-        res.status(200).send({ data: modifiedListings });
-    } catch (error) {
-        res.status(500).send({ data: error });
-    }
-});
+            description
+        } = req.body;
+        const userId = req.user._id;
 
-router.get('/api/listings/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const listing = await db.listings.findOne({ _id: new ObjectId(id) });
-        if (listing) {
-            const user = await db.users.findOne({ _id: new ObjectId(listing.userId) });
-            const sellerName = user ? user.name : 'Unknown Seller';
-            res.status(200).send({ data: {...listing, sellerName} });
-        } else {
-            res.status(404).send({ message: "Listing not found" });
+        try {
+            const newListing = {
+                price,
+                brand,
+                model,
+                year,
+                fuel,
+                version,
+                automaticGear,
+                images,
+                color,
+                mileage,
+                power,
+                equipment,
+                exclusiveVAT,
+                description,
+                userId: new ObjectId(userId)
+            }; 
+            await db.listings.insertOne(newListing);
+            res.status(201).send({ data: "Listing created" });
+        } catch (error) {
+            res.status(500).send({ data: error });
         }
-    } catch (error) {
-        res.status(500).send({ data: error });
-    }
-});
-
-router.put('/api/listings/:id', verifyToken, async (req, res) => {
-    const { id } = req.params;
-    const {
-        price,
-        brand,
-        model,
-        year,
-        fuel,
-        version,
-        automaticGear,
-        images,
-        color,
-        mileage,
-        power,
-        equipment,
-        exclusiveVAT,
-        description
-    } = req.body;
-
-    try {
-        const listing = await db.listings.findOne({ _id: new ObjectId(id) });
-        if (!listing) {
-            return res.status(404).send({ message: "Listing not found" });
+    });
+    
+    router.get('/api/listings', async (req, res) => {
+        const {
+            search = '',
+            sort = '',
+            page = 1,
+            limit = 30
+        } = req.query;
+        
+        const filters = {};
+        if (search) {
+            filters.$or = [
+                { brand: { $regex: search, $options: 'i' } },
+                { model: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
         }
+        
+        let sortOption = {};
+        switch (sort) {
+            case 'price_asc':
+                sortOption.price = 1;
+                break;
+            case 'price_desc':
+                sortOption.price = -1;
+                break;
+            case 'date_asc':
+                sortOption._id = 1;
+                break;
+            case 'date_desc':
+                sortOption._id = -1;
+                break;
+            default:
+                break;
+        }
+        
+        try {
+            const listings = await db.listings
+                .find(filters)
+                .sort(sortOption)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toArray();
+        
+            const total = await db.listings.countDocuments(filters);
+        
+            res.status(200).send({
+                data: listings,
+                total,
+                page: page,
+                pages: Math.ceil(total / limit)
+            });
+        } catch (error) {
+            res.status(500).send({
+                message: "Error fetching listings",
+                error: error.message
+            });
+        }
+    });    
 
-        const imagesToDelete = listing.images.filter(image => !images.includes(image));
-        imagesToDelete.forEach((imageUrl) => {
-            const imagePath = path.join('uploads', path.basename(imageUrl));
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
+    router.get('/api/listings/:id', async (req, res) => {
+        const { id } = req.params;
+        try {
+            const listing = await db.listings.findOne({ _id: new ObjectId(id) });
+            if (listing) {
+                const user = await db.users.findOne({ _id: new ObjectId(listing.userId) });
+                const sellerName = user ? user.name : 'Unknown Seller';
+                res.status(200).send({ data: {...listing, sellerName} });
+            } else {
+                res.status(404).send({ message: "Listing not found" });
             }
-        });
+        } catch (error) {
+            res.status(500).send({ data: error });
+        }
+    });
 
-        const updatedListing = {
+    router.put('/api/listings/:id', verifyToken, async (req, res) => {
+        const { id } = req.params;
+        const {
             price,
             brand,
             model,
@@ -127,48 +142,79 @@ router.put('/api/listings/:id', verifyToken, async (req, res) => {
             power,
             equipment,
             exclusiveVAT,
-            description,
-        };
+            description
+        } = req.body;
 
-        await db.listings.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: updatedListing }
-        );
+        try {
+            const listing = await db.listings.findOne({ _id: new ObjectId(id) });
+            if (!listing) {
+                return res.status(404).send({ message: "Listing not found" });
+            }
 
-        res.status(200).send({ message: "Listing updated" });
-    } catch (error) {
-        res.status(500).send({ message: "Error updating listing" });
-    }
-});
-
-router.delete('/api/listings/:id', verifyToken, async (req, res) => {
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    try {
-        const listing = await db.listings.findOne({ _id: new ObjectId(id) });
-        if (!listing) {
-            return res.status(404).send('Listing not found');
-        }
-        if (listing.userId.toString() !== userId.toString()) {
-            return res.status(403).send('You are not authorized to delete this listing');
-        }
-
-        if (listing.images && listing.images.length > 0) {
-            listing.images.forEach((imageUrl) => {
+            const imagesToDelete = listing.images.filter(image => !images.includes(image));
+            imagesToDelete.forEach((imageUrl) => {
                 const imagePath = path.join('uploads', path.basename(imageUrl));
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                 }
             });
+
+            const updatedListing = {
+                price,
+                brand,
+                model,
+                year,
+                fuel,
+                version,
+                automaticGear,
+                images,
+                color,
+                mileage,
+                power,
+                equipment,
+                exclusiveVAT,
+                description,
+            };
+
+            await db.listings.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: updatedListing }
+            );
+
+            res.status(200).send({ message: "Listing updated" });
+        } catch (error) {
+            res.status(500).send({ message: "Error updating listing" });
         }
+    });
 
-        await db.listings.deleteOne({ _id: new ObjectId(id) });
+    router.delete('/api/listings/:id', verifyToken, async (req, res) => {
+        const { id } = req.params;
+        const userId = req.user._id;
 
-        res.status(200).send({ message: "Listing deleted" });
-    } catch (error) {
-        res.status(500).send({ message: "Error deleting listing" });
-    }
-});
+        try {
+            const listing = await db.listings.findOne({ _id: new ObjectId(id) });
+            if (!listing) {
+                return res.status(404).send('Listing not found');
+            }
+            if (listing.userId.toString() !== userId.toString()) {
+                return res.status(403).send('You are not authorized to delete this listing');
+            }
 
-export default router;
+            if (listing.images && listing.images.length > 0) {
+                listing.images.forEach((imageUrl) => {
+                    const imagePath = path.join('uploads', path.basename(imageUrl));
+                    if (fs.existsSync(imagePath)) {
+                        fs.unlinkSync(imagePath);
+                    }
+                });
+            }
+
+            await db.listings.deleteOne({ _id: new ObjectId(id) });
+
+            res.status(200).send({ message: "Listing deleted" });
+        } catch (error) {
+            res.status(500).send({ message: "Error deleting listing" });
+        }
+    });
+
+    export default router;

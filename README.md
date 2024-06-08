@@ -6,10 +6,12 @@
 
 ## Features
 
-- Login & Signup
-- Create, view, edit and delete listings
+- Authentication and Authorization
+- Create, View, Edit and Delete Listings
 - Messaging (using Socket.io)
 - Contact Page
+
+- Database: MongoDB
 
 ## Environment Variables
 

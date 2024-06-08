@@ -1,35 +1,39 @@
 <script>
-    import { Button, CloseButton, Label, Input, Drawer, Select, ButtonGroup, InputAddon, Textarea, Dropzone, Checkbox, MultiSelect } from 'flowbite-svelte';    import { sineIn } from 'svelte/easing';
+    import { Button, CloseButton, Label, Input, Drawer, Select, ButtonGroup, InputAddon, Textarea, Dropzone, Checkbox, MultiSelect} from 'flowbite-svelte';
+    import { onMount } from 'svelte';
+    import { sineIn } from 'svelte/easing';
     import { CloudUpload, Trash2 } from 'lucide-svelte';
+    import ErrorToast from '../ErrorToast/ErrorToast.svelte';
 
-    export let brandOptions = [];
-    export let modelOptions = [];
-    export let fuelData = [];
-    export let versionData = [];
-    export let colorData = [];
-    export let equipmentData = [];
-
-    export let carPrice = '';
-    export let carBrand = '';
-    export let carModel = '';
-    export let carYear = '';
-    export let carFuel = '';
-    export let carVersion = '';
-    export let carAutomaticGear = false;
-    export let carImages = [];
-    export let carColor = '';
-    export let carMileage = '';
-    export let carPower = '';
-    export let carEquipment = [];
-    export let carExclusiveVAT = false;
-    export let carDescription = '';
-
-    export let addListing;
-    export let handleBrandChange;
-    export let handleModelChange;
     export let hidden4;
-    export let handleChange;
-    export let removeImage;
+    export let addListing;
+    export let brandOptions;
+    
+    let modelOptions = [];
+    let fuelData = [];
+    let versionData = [];
+    let colorData = [];
+    let equipmentData = [];
+
+    let carBrand = '';
+    let carModel = '';
+    let carPrice = '';
+    let carYear = '';
+    let carFuel = '';
+    let carVersion = '';
+    let carAutomaticGear = false;
+    let carImages = [];
+    let carColor = '';
+    let carMileage = '';
+    let carPower = '';
+    let carEquipment = [];
+    let carExclusiveVAT = false;
+    let carDescription = '';
+    let carBrandName = '';
+    let carModelName = '';
+
+    let errorMessage = '';
+    let failToast = false;
 
     const transitionParams = {
         x: 320,
@@ -40,6 +44,142 @@
     let imagePreviews = [];
 
     $: imagePreviews = carImages.map(image => URL.createObjectURL(image));
+
+    async function fetchBrands() {
+        try {
+            const response = await fetch('http://localhost:8080/api/cars/brands', {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                brandOptions = data.data;
+            } else {
+                errorMessage = "Kunne ikke indlæse bilmærker";
+                failToast = true;
+            }
+        } catch (error) {
+            errorMessage = "Kunne ikke indlæse bilmærker";
+            failToast = true;
+        }
+    }
+
+    async function fetchModels(brandId) {
+        modelOptions = [];
+        carModelName = '';
+        try {
+            const response = await fetch(`http://localhost:8080/api/cars/models/${brandId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                modelOptions = data.data;
+            } else {
+                errorMessage = "Kunne ikke indlæse bilmodeller";
+                failToast = true;
+            }
+        } catch (error) {
+            errorMessage = "Kunne ikke indlæse bilmodeller";
+            failToast = true;
+        }
+    }
+
+    function handleBrandSelection(event) {
+        carBrand = event.target.value;
+        const selectedBrand = brandOptions.find(brand => brand.value === carBrand);
+        carBrandName = selectedBrand ? selectedBrand.name : '';
+        fetchModels(carBrand);
+    }
+
+    function handleModelSelection(event) {
+        carModel = event.target.value;
+        const selectedModel = modelOptions.find(model => model.value === carModel);
+        carModelName = selectedModel ? selectedModel.name : '';
+    }
+
+    async function handleAddListing() {
+        errorMessage = '';
+        failToast = false;
+
+        if (!carBrand || !carModel || !carPrice || !carYear || !carFuel || !carVersion || !carColor || !carMileage || !carPower || !carDescription) {
+            errorMessage = "Alle felter skal udfyldes";
+            failToast = true;
+            return;
+        }
+
+        try {
+            const imageUrls = await Promise.all(carImages.map(async (image) => {
+                const formData = new FormData();
+                formData.append('image', image);
+
+                const response = await fetch('http://localhost:8080/api/upload', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error();
+                }
+
+                const data = await response.json();
+                return data.imageUrl;
+            }));
+
+            const response = await fetch('http://localhost:8080/api/listings', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    price: carPrice,
+                    brand: carBrandName,
+                    model: carModelName,
+                    year: carYear,
+                    fuel: carFuel,
+                    version: carVersion,
+                    automaticGear: carAutomaticGear,
+                    images: imageUrls,
+                    color: carColor,
+                    mileage: carMileage,
+                    power: carPower,
+                    equipment: carEquipment,
+                    exclusiveVAT: carExclusiveVAT,
+                    description: carDescription
+                })
+            });
+
+            if (response.ok) {
+                hidden4 = true;
+                addListing();
+            } else {
+                errorMessage = "Kunne ikke oprette annonce";
+                failToast = true;
+            }
+        } catch (error) {
+            errorMessage = "Kunne ikke oprette annonce";
+            failToast = true;
+        }
+    }
+
+    function handleChange(event) {
+        const files = event.target.files;
+        if (files.length > 0) {
+            carImages = [...carImages, files[0]];
+        }
+    }
+
+    function removeImage(index) {
+        carImages = carImages.filter((_, i) => i !== index);
+    }
+
+    onMount(() => {
+        fetchBrands();
+    });
 </script>
 
 <Drawer class="w-[500px] p-8" placement="right" transitionType="fly" {transitionParams} bind:hidden={hidden4} id="sidebar4">
@@ -49,14 +189,14 @@
         </h5>
         <CloseButton on:click={() => (hidden4 = true)} class="mb-4 dark:text-white" />
     </div>
-    <form on:submit|preventDefault={addListing} class="mb-6">
+    <form on:submit|preventDefault={handleAddListing} class="mb-6">
         <div class="mb-6">
             <Label for="carBrand" class="block mb-2">Mærke</Label>
-            <Select items={brandOptions} bind:value={carBrand} on:change={handleBrandChange} size="sm" placeholder="Vælg mærke" />
+            <Select items={brandOptions} bind:value={carBrand} on:change={handleBrandSelection} size="sm" placeholder="Vælg mærke" />
         </div>
         <div class="mb-6">
             <Label for="carModel" class="block mb-2">Model</Label>
-            <Select items={modelOptions} bind:value={carModel} on:change={handleModelChange} size="sm" placeholder="Vælg model" />
+            <Select items={modelOptions} bind:value={carModel} on:change={handleModelSelection} size="sm" placeholder="Vælg model" />
         </div>
         <div class="mb-6">
             <Label for="carYear" class="block mb-2">Årgang</Label>
@@ -65,7 +205,7 @@
         <div class="mb-6">
             <Label for="carPrice" class="block mb-2">Pris</Label>
             <ButtonGroup class="w-full" size="md">
-                <Input id="carPrice" name="carPrice" bind:value={carPrice} required type="number" placeholder="Pris" />
+                <Input id="carPrice" name="carPrice" bind:value={carPrice} required type="number" placeholder="Pris" min="1"/>
                 <InputAddon>kr.</InputAddon>
             </ButtonGroup>
         </div>
@@ -127,3 +267,5 @@
         <Button type="submit" class="w-full">Opret annonce</Button>
     </form>
 </Drawer>
+
+<ErrorToast {errorMessage} {failToast}/>
