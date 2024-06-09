@@ -5,15 +5,16 @@
     import { CloudUpload, Trash2 } from 'lucide-svelte';
     import ErrorToast from '../ErrorToast/ErrorToast.svelte';
 
+    import { fuelData } from '../../data/fuelData.js';
+    import { versionData } from '../../data/versionData.js';
+    import { colorData } from '../../data/colorData.js';
+    import { equipmentData } from '../../data/equipmentData.js';
+
     export let hidden4;
     export let addListing;
     export let brandOptions;
     
     let modelOptions = [];
-    let fuelData = [];
-    let versionData = [];
-    let colorData = [];
-    let equipmentData = [];
 
     let carBrand = '';
     let carModel = '';
@@ -101,9 +102,6 @@
     }
 
     async function handleAddListing() {
-        errorMessage = '';
-        failToast = false;
-
         if (!carBrand || !carModel || !carPrice || !carYear || !carFuel || !carVersion || !carColor || !carMileage || !carPower || !carDescription) {
             errorMessage = "Alle felter skal udfyldes";
             failToast = true;
@@ -111,7 +109,7 @@
         }
 
         try {
-            const imageUrls = await Promise.all(carImages.map(async (image) => {
+            const uploadPromises = carImages.map(async (image) => {
                 const formData = new FormData();
                 formData.append('image', image);
 
@@ -126,8 +124,12 @@
                 }
 
                 const data = await response.json();
-                return data.imageUrl;
-            }));
+                console.log("datais", data)
+                return data.data;
+            });
+
+            const imageUrls = await Promise.all(uploadPromises);
+            console.log("imageUrls", imageUrls);
 
             const response = await fetch('http://localhost:8080/api/listings', {
                 method: 'POST',
@@ -165,6 +167,7 @@
             failToast = true;
         }
     }
+
 
     function handleChange(event) {
         const files = event.target.files;

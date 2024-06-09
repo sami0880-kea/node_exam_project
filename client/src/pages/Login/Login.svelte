@@ -56,26 +56,26 @@
 <div class="flex flex-col items-center justify-center min-h-screen">
         <Card>
         <form on:submit|preventDefault={login} class="flex flex-col space-y-6">
-            <h1 class="text-xl font-medium text-gray-900 dark:text-white">Login</h1>
+            <h1 class="text-xl font-medium text-gray-900 dark:text-white">Logind</h1>
             <div class="mb-4">
-                <Label for="email" class="mb-2">Email address</Label>
+                <Label for="email" class="mb-2">Email addresse</Label>
                 <Input type="email" id="email" placeholder="johndoe@company.com" bind:value={email} required />
             </div>
             <div class="mb-4">
-                <Label for="password" class="mb-2">Password</Label>
+                <Label for="password" class="mb-2">Adgangskode</Label>
                 <Input type="password" id="password" placeholder="•••••••••" bind:value={password} required />
             </div>
             <div class="flex items-center justify-between">
                 {#if isLoading}
                     <Button disabled class="w-full flex items-center justify-center">
-                        <Spinner class="me-3" size="4" color="white" /> Loading ...
+                        <Spinner class="me-3" size="4" color="white" /> Vent venligst ...
                     </Button>
                 {:else}
-                    <Button class="w-full" type="submit">Login</Button>
+                    <Button class="w-full" type="submit">Logind</Button>
                 {/if}
             </div>
             <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-300">
-                Not registered? <a href="/signup" class="text-primary-700 hover:underline dark:text-primary-500"> Create an account </a>
+                Har du ikke en bruger? <a href="/signup" class="text-primary-700 hover:underline dark:text-primary-500"> Opret bruger</a>
             </div>
         </form>
     </Card>
@@ -83,5 +83,5 @@
 
 <Toast transition={fly} params={{ x: 200 }} dismissable={false} position="bottom-right" color="none" defaultIconClass="w-8 h-8 text-red bg-white" class="bg-red-500 dark:bg-red-500 text-white dark:text-white mb-4 fixed" bind:open={failToast}>
     <X slot="icon" class="text-red-500 w-5 h-5"/>
-    Invalid login details!
+    Ugyldig logind detaljer
 </Toast>

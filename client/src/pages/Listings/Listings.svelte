@@ -1,5 +1,5 @@
 <script>
-    import { Pagination, PaginationItem, Search, Heading, Button, Spinner, Select, P } from 'flowbite-svelte';
+    import { PaginationItem, Search, Heading, Button, Spinner, Select, P } from 'flowbite-svelte';
     import { onMount } from 'svelte';
     import AddListingComponent from '../../components/AddListing/AddListing.svelte';
     import ListingCard from '../../components/ListingCard/ListingCard.svelte';
@@ -13,14 +13,15 @@
     let loading = true;
     let searchQuery = '';
     let sortOption = '';
+
     let failToast = false;
     let errorMessage = '';
 
     let sortOptions = [
-        { value: 'price_asc', name: 'Pris (højeste først)' },
-        { value: 'price_desc', name: 'Price (laveste først)' },
-        { value: 'date_asc', name: 'Dato (nyeste først)' },
-        { value: 'date_desc', name: 'Date (ældste først)'},
+        { value: 'price_desc', name: 'Pris (højeste først)' },
+        { value: 'price_asc', name: 'Pris (laveste først)' },
+        { value: 'date_desc', name: 'Date (nyeste først)'},
+        { value: 'date_asc', name: 'Dato (ældste først)' },
     ];
     
     let currentPage = 1;
@@ -103,7 +104,7 @@ function prevPage() {
     <div class="flex flex-col items-center">
         <div class="flex gap-2 my-6">
             <Search
-            placeholder="Search car"
+            placeholder="Søg efter bil"
             size="md"
             class="w-96"
             bind:value={searchQuery}

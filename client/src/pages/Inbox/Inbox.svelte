@@ -42,14 +42,14 @@
 </script>
 
 <div class="flex flex-col items-center justify-center min-h-screen text-center">
-  <h2 class="text-2xl text-white font-semibold mb-4">Dine Beskeder</h2>
+  <h2 class="text-2xl text-gray-900 font-semibold dark:text-white mb-4">Dine Beskeder</h2>
   <div class="w-full max-w-lg">
     {#if rooms.length > 0}
       <ul class="divide-y divide-gray-200 dark:divide-gray-700 ">
         {#each rooms as room (room._id)}
           <li class="py-3 sm:py-4">
             <button class="flex items-start space-x-3 cursor-pointer"  on:click={() => goToConversation(room._id)}>
-              <Avatar src={room.listingImage} alt="Listing image"/>
+              <img src={room.listingImage} alt="Listing Car" class="w-12 h-12 object-cover rounded-full"/>
               <div class="flex-1 min-w-0">
                 <p class="text-left text-sm font-semibold text-gray-900 truncate dark:text-white">{room.listingName ? room.listingName : 'Slettet annonce'}</p>
                 <p class="text-left text-sm text-gray-500 truncate dark:text-gray-400">{room.latestMessage.text}</p>
@@ -59,7 +59,7 @@
         {/each}
       </ul>
     {:else}
-      <p class="text-white">Du har ikke startet en samtale endnu.</p>
+      <p class="text-gray-900 dark:text-white">Du har ikke startet en samtale endnu.</p>
     {/if}
   </div>
 </div>

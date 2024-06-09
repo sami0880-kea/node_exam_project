@@ -17,7 +17,7 @@
     async function signUp() {
         if (password !== confirmPassword) {
             failToast = true;
-            errorMessage = "Passwords do not match";
+            errorMessage = "Adgangskode er ikke ens";
             return;
         }
         isLoading = true;
@@ -39,7 +39,7 @@
             }
         } catch (error) {
             failToast = true;
-            errorMessage = "Error registering user";
+            errorMessage = "Kunne ikke oprette bruger...";
         } finally {
             isLoading = false;
         }
@@ -54,37 +54,37 @@
 <div class="flex flex-col items-center justify-center min-h-screen">
     <Card>
         <form on:submit|preventDefault={signUp} class="flex flex-col space-y-6">
-            <h1 class="text-xl font-medium text-gray-900 dark:text-white">Sign up</h1>
+            <h1 class="text-xl font-medium text-gray-900 dark:text-white">Opret bruger</h1>
             <div class="mb-4">
-                <Label for="name" class="mb-2">Name</Label>
+                <Label for="name" class="mb-2">Navn</Label>
                 <Input type="text" id="name" placeholder="John Doe" bind:value={name} required />
             </div>
             <div class="mb-4">
-                <Label for="email" class="mb-2">Email address</Label>
+                <Label for="email" class="mb-2">Email addresse</Label>
                 <Input type="email" id="email" placeholder="johndoe@mail.com" bind:value={email} required />
             </div>
             <div class="mb-4">
-                <Label for="password" class="mb-2">Password</Label>
+                <Label for="password" class="mb-2">Adgangskode</Label>
                 <Input type="password" id="password" placeholder="•••••••••" bind:value={password} required />
             </div>
             <div class="mb-4">
-                <Label for="confirm_password" class="mb-2">Confirm password</Label>
+                <Label for="confirm_password" class="mb-2">Bekræft adgangskode</Label>
                 <Input type="password" id="confirm_password" placeholder="•••••••••" bind:value={confirmPassword} required />
             </div>
             <Checkbox class="mb-4 space-x-1 rtl:space-x-reverse " required>
-            I agree with the <A class="text-primary-700 dark:text-primary-600 hover:underline">terms and conditions</A>
+            Jeg acceptere <A class="text-primary-700 dark:text-primary-600 hover:underline">vilkår og betingelser.</A>
             </Checkbox>
             <div class="flex items-center justify-between">
                 {#if isLoading}
                     <Button disabled class="w-full flex items-center justify-center">
-                        <Spinner class="me-3" size="4" color="white" /> Loading ...
+                        <Spinner class="me-3" size="4" color="white" /> Vent venligst ...
                     </Button>
                 {:else}
-                    <Button class="w-full" type="submit">Sign up</Button>
+                    <Button class="w-full" type="submit">Opret bruger</Button>
                 {/if}
             </div>
             <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-300">
-                Already have an account? <a href="/login" class="text-primary-700 hover:underline dark:text-primary-500"> Login </a>
+                Har du allerede en bruger? <a href="/login" class="text-primary-700 hover:underline dark:text-primary-500"> Logind </a>
             </div>
         </form>
     </Card>

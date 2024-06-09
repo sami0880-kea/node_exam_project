@@ -166,7 +166,7 @@
 
             <Card size="lg" padding="sm" class="m-4">
                 <h5 class="m-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">Beskrivelse</h5>
-                <p class="m-2">{car.description}</p>
+                <p class="m-2 whitespace-pre-wrap">{car.description}</p>
             </Card>
         </div>
         <Card class="m-4 h-full" size="sm">
