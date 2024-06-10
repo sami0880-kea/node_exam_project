@@ -9,6 +9,7 @@
     import { versionData } from '../../data/versionData.js';
     import { colorData } from '../../data/colorData.js';
     import { equipmentData } from '../../data/equipmentData.js';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     export let hidden4;
     export let addListing;
@@ -18,18 +19,18 @@
 
     let carBrand = '';
     let carModel = '';
-    let carPrice = '';
-    let carYear = '';
-    let carFuel = '';
-    let carVersion = '';
+    let carPrice = '150000';
+    let carYear = '2020';
+    let carFuel = 'Petrol';
+    let carVersion = 'Sedan';
     let carAutomaticGear = false;
     let carImages = [];
-    let carColor = '';
-    let carMileage = '';
-    let carPower = '';
-    let carEquipment = [];
+    let carColor = 'Hvid';
+    let carMileage = '79000';
+    let carPower = '204';
+    let carEquipment = ['appleCarplay', 'glassRoof'];
     let carExclusiveVAT = false;
-    let carDescription = '';
+    let carDescription = 'Virkelig god og billig bil!';
     let carBrandName = '';
     let carModelName = '';
 
@@ -48,7 +49,7 @@
 
     async function fetchBrands() {
         try {
-            const response = await fetch('http://localhost:8080/api/cars/brands', {
+            const response = await fetch($BASE_URL + '/api/cars/brands', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -70,7 +71,7 @@
         modelOptions = [];
         carModelName = '';
         try {
-            const response = await fetch(`http://localhost:8080/api/cars/models/${brandId}`, {
+            const response = await fetch(`${$BASE_URL}/api/cars/models/${brandId}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -113,7 +114,7 @@
                 const formData = new FormData();
                 formData.append('image', image);
 
-                const response = await fetch('http://localhost:8080/api/upload', {
+                const response = await fetch(`${$BASE_URL}/api/upload`, {
                     method: 'POST',
                     credentials: 'include',
                     body: formData
@@ -131,7 +132,7 @@
             const imageUrls = await Promise.all(uploadPromises);
             console.log("imageUrls", imageUrls);
 
-            const response = await fetch('http://localhost:8080/api/listings', {
+            const response = await fetch(`${$BASE_URL}/api/listings`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

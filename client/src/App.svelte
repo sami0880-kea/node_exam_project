@@ -7,13 +7,14 @@
 
     import Home from "./pages/Home/Home.svelte";
     import Listings from "./pages/Listings/Listings.svelte";
+    import MyListings from "./pages/MyListings/MyListings.svelte";
     import Listing from "./pages/Listing/Listing.svelte";
     import Login from "./pages/Login/Login.svelte";
     import Signup from "./pages/Signup/Signup.svelte";
     import Contact from "./pages/Contact/Contact.svelte";
     import Messages from "./pages/Messages/Messages.svelte"; 
     import Inbox from "./pages/Inbox/Inbox.svelte"; 
-  import Footer from "./components/Footer/Footer.svelte";
+    import Footer from "./components/Footer/Footer.svelte";
 
     onMount(() => {
         fetchUser();
@@ -37,6 +38,10 @@
     
     <PrivateRoute path="/messages/:id" let:params>
         <Messages id={params.id} />
+    </PrivateRoute>
+
+    <PrivateRoute path="/mylistings">
+        <MyListings/>
     </PrivateRoute>
 </Router>
 <Footer/>

@@ -3,6 +3,7 @@
   import { user } from '../../stores/userStore.js';
   import { Avatar } from 'flowbite-svelte';
   import ErrorToast from '../../components/ErrorToast/ErrorToast.svelte';
+  import { BASE_URL } from '../../stores/urlStore.js';
 
   let rooms = [];
   let currentUser;
@@ -16,7 +17,7 @@
     if (!currentUser) return;
     
     try {
-      const response = await fetch(`http://localhost:8080/api/conversations/user/${currentUser._id}`, {
+      const response = await fetch(`${$BASE_URL}/api/conversations/user/${currentUser._id}`, {
         credentials: 'include',
       });
       if (response.ok) {

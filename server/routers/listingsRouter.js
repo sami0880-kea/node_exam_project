@@ -119,6 +119,27 @@ router.get('/api/listings', async (req, res) => {
     }
 });    
 
+router.get('/api/listings/user/:userId', async (req, res) => {
+    const { userId } = req.params;
+        
+    try {
+        const listings = await db.listings
+            .find({ userId: new ObjectId(userId) })
+            .toArray();
+    
+        res.status(200).send({
+            data: listings,
+            total: listings.length,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "Error fetching listings for the user",
+            error: error.message
+        });
+    }
+});
+
+
 router.get('/api/listings/:id', async (req, res) => {
     const { id } = req.params;
     try {

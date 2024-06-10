@@ -6,6 +6,7 @@
     import { onMount } from 'svelte';
     import { X } from 'lucide-svelte';
     import { DarkMode } from 'flowbite-svelte';
+  import { BASE_URL } from '../../stores/urlStore.js';
 
     let email = 'johndoe@mail.com';
     let password = 'johndoe1234';
@@ -16,7 +17,7 @@
     async function login() {
         try {
             isLoading = true;  
-            const response = await fetch('http://localhost:8080/api/login', {
+            const response = await fetch(`${$BASE_URL}/api/login`, {
                 method: 'POST',
                 credentials: "include",
                 headers: {

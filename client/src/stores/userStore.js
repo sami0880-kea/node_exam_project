@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { BASE_URL } from './urlStore.js';
 
 export const user = writable(null);
 

@@ -1,10 +1,11 @@
 <script>
-    import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Avatar, Dropdown, DropdownItem, DropdownHeader, Button } from 'flowbite-svelte';
+    import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Avatar, Dropdown, DropdownItem, DropdownHeader, DropdownDivider, Button } from 'flowbite-svelte';
     import { navigate } from "svelte-routing";
     import { user } from '../../stores/userStore.js';
     import { DarkMode } from 'flowbite-svelte';
     import { Mail } from 'lucide-svelte';
     import ErrorToast from '../ErrorToast/ErrorToast.svelte';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     const activeUrl = window.location.pathname;
 
@@ -13,7 +14,7 @@
 
     async function logout() {
         try {
-            const response = await fetch('http://localhost:8080/api/logout', {
+            const response = await fetch(`${$BASE_URL}/api/logout`, {
                 method: 'POST',
                 credentials: 'include',
             });
@@ -47,8 +48,10 @@
         
         <Dropdown placement="bottom" triggeredBy="#avatar-menu">
           <DropdownHeader>
-            <span class="block text-sm">{$user.name}</span>
+            <span class="block text-sm font-bold">Hej, {$user.name} 👋</span>
           </DropdownHeader>
+          <DropdownItem on:click={() => navigate('/mylistings')}>Mine Annoncer</DropdownItem>
+          <DropdownDivider />
           <DropdownItem on:click={logout}>Log ud</DropdownItem>
         </Dropdown>
       {:else}

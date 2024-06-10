@@ -6,6 +6,7 @@
     import { user } from '../../stores/userStore.js';
     import { ArrowLeft, ArrowRight, Tag } from 'lucide-svelte';
     import ErrorToast from '../../components/ErrorToast/ErrorToast.svelte';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     let hidden4 = true;
     let brandOptions = [];
@@ -36,7 +37,7 @@
                 page
             }).toString();
 
-            const response = await fetch(`http://localhost:8080/api/listings?${query}`, {
+            const response = await fetch(`${$BASE_URL}/api/listings?${query}`, {
                 credentials: 'include',
             });
 
@@ -71,7 +72,7 @@ function prevPage() {
   
   async function fetchBrands() {
         try {
-            const response = await fetch('http://localhost:8080/api/cars/brands', {
+            const response = await fetch(`${$BASE_URL}/api/cars/brands`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

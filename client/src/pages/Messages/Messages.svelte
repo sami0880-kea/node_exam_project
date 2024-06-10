@@ -6,6 +6,7 @@
     import { Send } from 'lucide-svelte';
     import { format, isToday } from 'date-fns'; 
     import ErrorToast from '../../components/ErrorToast/ErrorToast.svelte';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     let socket;
     let messages = [];
@@ -21,7 +22,7 @@
 
     async function fetchMessages(conversationId) {
         try {
-            const response = await fetch(`http://localhost:8080/api/messages/${conversationId}`, {
+            const response = await fetch(`${$BASE_URL}/api/messages/${conversationId}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -38,7 +39,7 @@
 
     async function fetchConversationDetails(conversationId) {
         try {
-            const response = await fetch(`http://localhost:8080/api/conversations/${conversationId}`, {
+            const response = await fetch(`${$BASE_URL}/api/conversations/${conversationId}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -77,7 +78,7 @@
     }
 
     async function initialize() {
-        socket = io('http://localhost:8080');
+        socket = io($BASE_URL);
 
         socket.on('server-sends-message', (data) => {
             messages = [...messages, {

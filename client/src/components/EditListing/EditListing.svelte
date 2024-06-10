@@ -10,6 +10,7 @@
     import { colorData } from '../../data/colorData.js';
     import { equipmentData } from '../../data/equipmentData.js';
     import ErrorToast from '../ErrorToast/ErrorToast.svelte';
+  import { BASE_URL } from '../../stores/urlStore.js';
 
     export let id;
     export let hidden = true;
@@ -41,7 +42,7 @@
 
     async function fetchListingDetails() {
         try {
-            const response = await fetch(`http://localhost:8080/api/listings/${id}`, {
+            const response = await fetch(`${$BASE_URL}/api/listings/${id}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -82,7 +83,7 @@
                     const formData = new FormData();
                     formData.append('image', image);
 
-                    const response = await fetch('http://localhost:8080/api/upload', {
+                    const response = await fetch(`${$BASE_URL}/api/upload`, {
                         method: 'POST',
                         credentials: 'include',
                         body: formData
@@ -94,7 +95,7 @@
                 imageUrls = imageUrls.concat(newImageUrls);
             }
 
-            const response = await fetch(`http://localhost:8080/api/listings/${id}`, {
+            const response = await fetch(`${$BASE_URL}/api/listings/${id}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {

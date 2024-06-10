@@ -3,6 +3,7 @@
     import { user } from '../../stores/userStore.js';
     import { fly } from 'svelte/transition';
     import { X, Check } from 'lucide-svelte';
+  import { BASE_URL } from '../../stores/urlStore.js';
 
     $: currentUser = $user;
     
@@ -27,7 +28,7 @@
 
     async function sendMail() {
         try {
-            const response = await fetch('http://localhost:8080/api/send-email', {
+            const response = await fetch(`${$BASE_URL}/api/send-email`, {
                 method: 'POST',
                 credentials: "include",
                 headers: {

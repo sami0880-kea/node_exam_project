@@ -8,6 +8,7 @@
     import { equipmentData } from '../../data/equipmentData.js';
     import EditListing from '../../components/EditListing/EditListing.svelte';
     import ErrorToast from '../../components/ErrorToast/ErrorToast.svelte';
+  import { BASE_URL } from '../../stores/urlStore.js';
 
     export let id;
     let car = null;
@@ -25,7 +26,7 @@
     
     async function fetchCarDetails() {
         try {
-            const response = await fetch(`http://localhost:8080/api/listings/${id}`, {
+            const response = await fetch(`${$BASE_URL}/api/listings/${id}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -51,7 +52,7 @@
 
     async function deleteListing() {
         try {
-            const response = await fetch(`http://localhost:8080/api/listings/${id}`, {
+            const response = await fetch(`${$BASE_URL}/api/listings/${id}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -72,7 +73,7 @@
         if (!currentUser || !car) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/conversations/find/${currentUser._id}/${car.userId}/${id}`, {
+            const response = await fetch(`${$BASE_URL}/api/conversations/find/${currentUser._id}/${car.userId}/${id}`, {
                 credentials: 'include',
             });
             if (response.ok) {

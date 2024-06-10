@@ -4,6 +4,7 @@
     import { fly } from 'svelte/transition';
     import { X } from 'lucide-svelte';
     import { DarkMode } from 'flowbite-svelte';
+  import { BASE_URL } from '../../stores/urlStore.js';
 
     let name = 'Jane Doe';
     let email = 'janedoe@mail.com';
@@ -23,7 +24,7 @@
         isLoading = true;
 
         try {
-            const response = await fetch('http://localhost:8080/api/signup', {
+            const response = await fetch(`${$BASE_URL}/api/signup`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json' 
