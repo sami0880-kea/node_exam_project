@@ -2,9 +2,10 @@ import { Router } from 'express';
 import db from "../database/connection.js";
 import { hash, compare } from '../util/passwordUtil.js';
 import jwt from 'jsonwebtoken';
+import authRateLimiter from '../util/authRaterLimiterUtil.js';
 const router = Router();
 
-router.post('/api/login', async (req, res) => {
+router.post('/api/login', authRateLimiter, async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await db.users.findOne({ email });
@@ -28,7 +29,7 @@ router.post('/api/login', async (req, res) => {
     }
 });
 
-router.post('/api/signup', async (req, res) => {
+router.post('/api/signup', authRateLimiter, async (req, res) => {
     const { name, email, password } = req.body;
     try {
         const existingUser = await db.users.findOne({ email });

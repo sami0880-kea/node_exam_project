@@ -12,6 +12,7 @@ import conversationsRouter from './routers/conversationsRouter.js';
 import messagesRouter from './routers/messagesRouter.js';
 import carsRouter from './routers/carsRouter.js';
 import uploadRouter from './routers/uploadRouter.js';
+import limiter from './util/rateLimiterUtil.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -23,6 +24,12 @@ app.use(cookieParser());
 app.use(cors({ origin: true, credentials: true }));
 
 app.use('/uploads', express.static('uploads'));
+
+app.use(limiter);
+
+import helmet from "helmet";
+app.use(helmet());
+
 
 app.use(authRouter);
 app.use(usersRouter);
