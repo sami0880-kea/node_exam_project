@@ -19,18 +19,18 @@
 
     let carBrand = '';
     let carModel = '';
-    let carPrice = '150000';
+    let carPrice = '635000';
     let carYear = '2020';
     let carFuel = 'Petrol';
-    let carVersion = 'Sedan';
-    let carAutomaticGear = false;
+    let carVersion = 'Station Car';
+    let carAutomaticGear = true;
     let carImages = [];
-    let carColor = 'Hvid';
-    let carMileage = '79000';
-    let carPower = '204';
+    let carColor = 'Gråmetal';
+    let carMileage = '48000';
+    let carPower = '600';
     let carEquipment = ['appleCarplay', 'glassRoof'];
     let carExclusiveVAT = false;
-    let carDescription = 'Virkelig god og billig bil!';
+    let carDescription = 'Hermed udbydes en super flot og velholdt Audi RS6 i den underspillede Daytona grå med mange af de rigtige krydser på udstyrslisten, et godt kilometertal og fortsat fabriksgaranti. På alle måder en rigtig velkørende maskine, som der er taget utroligt godt hånd om.';
     let carBrandName = '';
     let carModelName = '';
 
@@ -125,13 +125,11 @@
                 }
 
                 const data = await response.json();
-                console.log("datais", data)
                 return data.data;
             });
 
             const imageUrls = await Promise.all(uploadPromises);
-            console.log("imageUrls", imageUrls);
-
+            
             const response = await fetch(`${$BASE_URL}/api/listings`, {
                 method: 'POST',
                 credentials: 'include',

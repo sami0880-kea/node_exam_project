@@ -9,8 +9,8 @@
 - Authentication and Authorization
 - Create, View, Edit and Delete Listings
 - Messaging (using Socket.io)
+- Forgot Password
 - Contact Page
-
 - Database: MongoDB
 
 ## Environment Variables
@@ -23,6 +23,9 @@ To run this project, you will need to add the following environment variable to 
 `JWT_SECRET`
 `SYNSBASEN_API_KEY`
 `RESEND_API_KEY`
+`AWS_ACCESS_KEY_ID`
+`AWS_SECRET_ACCESS_KEY`
+`AWS_BUCKET_NAME`
 
 ## Preview
 ![Screenshot 2024-05-27 at 23 04 32](https://github.com/sami0880-kea/node_exam_project/assets/113104513/59e6fdad-3c92-46ad-a81a-94d3690b67cd)

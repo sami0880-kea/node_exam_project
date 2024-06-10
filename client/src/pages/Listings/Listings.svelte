@@ -108,7 +108,7 @@
 </script>
 
 <div class="py-16 mx-auto min-h-screen">
-    <Heading class="mb-4 text-center">Biler</Heading>
+    <Heading class="mb-4 text-center">Biler til salg</Heading>
     <div class="flex flex-col items-center">
         <div class="flex gap-2 my-6">
             <Search
