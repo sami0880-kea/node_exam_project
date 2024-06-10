@@ -53,7 +53,7 @@
               <img src={room.listingImage} alt="Listing Car" class="w-12 h-12 object-cover rounded-full"/>
               <div class="flex-1 min-w-0">
                 <p class="text-left text-sm font-semibold text-gray-900 truncate dark:text-white">{room.listingName ? room.listingName : 'Slettet annonce'}</p>
-                <p class="text-left text-sm text-gray-500 truncate dark:text-gray-400">{room.latestMessage.text}</p>
+                <p class="text-left text-sm text-gray-500 truncate dark:text-gray-400">{room.latestMessage.text.substring(0, 16) + '...'}</p>
               </div>
             </button>
           </li>

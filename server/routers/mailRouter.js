@@ -17,7 +17,7 @@ router.post('/api/send-email', async (req, res) => {
         const { data, error } = await resend.emails.send({
             from: 'LeasePortalen <contactform@samim.one>',
             to: [email],
-            subject: subject,
+            subject: `LeasePortalen - Henvendelse (${subject})`,
             text: `Vi har modtaget din besked! Du vil høre fra os hurtigst muligt! \nEmne: ${subject} \nBesked: ${message}`,
         });
 

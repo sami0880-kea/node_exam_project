@@ -8,7 +8,7 @@
     import { equipmentData } from '../../data/equipmentData.js';
     import EditListing from '../../components/EditListing/EditListing.svelte';
     import ErrorToast from '../../components/ErrorToast/ErrorToast.svelte';
-  import { BASE_URL } from '../../stores/urlStore.js';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     export let id;
     let car = null;

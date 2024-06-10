@@ -26,15 +26,17 @@
     ];
     
     let currentPage = 1;
+    let pageNumber = 1;
     let totalPages = 1;
+    let totalListings;
 
-    async function fetchListings(page = 1) {
+    async function fetchListings() {
         loading = true;
         try {
             const query = new URLSearchParams({
                 search: searchQuery,
                 sort: sortOption,
-                page
+                page: pageNumber
             }).toString();
 
             const response = await fetch(`${$BASE_URL}/api/listings?${query}`, {
@@ -46,6 +48,7 @@
                 listings = result.data;
                 totalPages = result.pages;
                 currentPage = result.page;
+                totalListings = result.total;
             } else {
                 errorMessage = "Kunne ikke indlæse annoncer";
                 failToast = true;
@@ -58,19 +61,23 @@
         }
     }
 
-  function nextPage() {
-    if (currentPage < totalPages) {
-        fetchListings(currentPage + 1);
+    function nextPage() {
+        currentPage = Number(currentPage);
+        if (currentPage < totalPages) {
+            pageNumber = currentPage + 1;
+            fetchListings();
+        }
     }
-}
 
-function prevPage() {
-    if (currentPage > 1) {
-      fetchListings(currentPage - 1);
+    function prevPage() {
+        currentPage = Number(currentPage);
+        if (currentPage > 1) {
+            pageNumber = currentPage - 1;
+            fetchListings();
+        }
     }
-  }
   
-  async function fetchBrands() {
+    async function fetchBrands() {
         try {
             const response = await fetch(`${$BASE_URL}/api/cars/brands`, {
                 headers: {
@@ -90,7 +97,7 @@ function prevPage() {
         }
     }
 
-  function refreshListings() {
+    function refreshListings() {
         fetchListings();
     }
 
@@ -118,11 +125,6 @@ function prevPage() {
             <Button on:click={() => (hidden4 = false)}><Tag class="mr-2"/> Sælg din bil</Button>
         </div>
     {/if}
-        <div class="flex items-start justify-end w-4/5 m-4">
-            <div class="flex justify-end">
-                <Select items={sortOptions} bind:value={sortOption} on:change={refreshListings} placeholder="Sorter" class="w-48"/>
-            </div>
-        </div>
     {#if loading}
     <div class="flex items-center justify-center min-h-screen">
         <div class="flex flex-col items-center">
@@ -131,6 +133,14 @@ function prevPage() {
         </div>
     </div>
     {:else if listings.length}
+        <div class="grid grid-cols-2 gap-4 mt-8 mb-8 w-full max-w-6xl mx-auto">
+            <div class="gap-x-1 items-left content-center justify-start text-base text-gray-700 dark:text-gray-400 m-4">
+                Fundet <span class="font-semibold text-gray-900 dark:text-white">{totalListings}</span> resultater
+            </div>
+            <div class="flex justify-end m-4">
+                <Select items={sortOptions} bind:value={sortOption} on:change={refreshListings} placeholder="Sorter" class="w-48 h-15"/>
+            </div>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 mb-8 w-full max-w-6xl mx-auto">
             {#each listings as listing (listing._id)}
                 <ListingCard {listing} />

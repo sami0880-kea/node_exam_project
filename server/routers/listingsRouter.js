@@ -208,17 +208,17 @@ router.put('/api/listings/:id', verifyToken, async (req, res) => {
         }));
 
         const updatedListing = {
-            price,
+            price: Number(price),
             brand,
             model,
-            year,
+            year: Number(year),
             fuel,
             version,
             automaticGear,
             images: uploadedImages,
             color,
-            mileage,
-            power,
+            mileage: Number(mileage),
+            power: Number(power),
             equipment,
             exclusiveVAT,
             description,

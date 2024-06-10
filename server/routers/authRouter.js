@@ -65,7 +65,7 @@ router.post('/api/forgot-password', authRateLimiter, async (req, res) => {
             from: 'LeasePortalen <noreply@samim.one>',
             to: [email],
             subject: 'Nustil adgangskode',
-            text: `Du har anmodet om en nulstilling af adgangskoden. \nKlik venligst på følgende link for at nulstille din adgangskode: ${resetUrl} \n\nDenne mail kan ikke besvares!`
+            text: `Du har anmodet om en nulstilling af adgangskoden. \nKlik venligst på følgende link for at nulstille din adgangskode (gyldig i 6 timer): ${resetUrl} \n\nDenne mail kan ikke besvares!`
         });
 
         if (error) {
