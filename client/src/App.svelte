@@ -15,6 +15,8 @@
     import Messages from "./pages/Messages/Messages.svelte"; 
     import Inbox from "./pages/Inbox/Inbox.svelte"; 
     import Footer from "./components/Footer/Footer.svelte";
+    import ResetPassword from "./pages/ResetPassword/ResetPassword.svelte";
+    import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.svelte";
 
     onMount(() => {
         fetchUser();
@@ -31,6 +33,8 @@
     <Route path="/contact" component={Contact} />
     <Route path="/listings" component={Listings} />
     <Route path="/listing/:id" component={Listing} />
+    <Route path="/forgot-password" component={ForgotPassword} />
+    <Route path="/reset-password" component={ResetPassword} />
 
     <PrivateRoute path="/inbox">
         <Inbox/>

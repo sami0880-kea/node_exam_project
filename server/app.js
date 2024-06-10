@@ -8,6 +8,7 @@ import { messagesSocket } from './util/socketsUtil.js';
 import authRouter from './routers/authRouter.js';
 import usersRouter from './routers/usersRouter.js';
 import listingsRouter from './routers/listingsRouter.js';
+import mailRouter from './routers/mailRouter.js';
 import conversationsRouter from './routers/conversationsRouter.js';
 import messagesRouter from './routers/messagesRouter.js';
 import carsRouter from './routers/carsRouter.js';
@@ -37,6 +38,7 @@ app.use(listingsRouter);
 app.use(carsRouter);
 app.use(uploadRouter);
 app.use(conversationsRouter);
+app.use(mailRouter);
 app.use(messagesRouter);
 
 const PORT = process.env.PORT ?? 8080;

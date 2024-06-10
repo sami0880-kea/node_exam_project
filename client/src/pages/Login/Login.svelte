@@ -1,12 +1,11 @@
 <script>
     import { navigate } from 'svelte-routing';
     import { fetchUser } from '../../stores/userStore.js';
-    import { Card, Input, Label, Button, Toast, Spinner } from 'flowbite-svelte';
+    import { DarkMode, Card, Input, Label, Button, Toast, Spinner } from 'flowbite-svelte';
     import { fly } from 'svelte/transition';
     import { onMount } from 'svelte';
     import { X } from 'lucide-svelte';
-    import { DarkMode } from 'flowbite-svelte';
-  import { BASE_URL } from '../../stores/urlStore.js';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     let email = 'johndoe@mail.com';
     let password = 'johndoe1234';
@@ -65,6 +64,9 @@
             <div class="mb-4">
                 <Label for="password" class="mb-2">Adgangskode</Label>
                 <Input type="password" id="password" placeholder="•••••••••" bind:value={password} required />
+            </div>
+            <div class="text-left text-sm font-medium text-gray-500 dark:text-gray-300">
+                Glemt din adgangskode? <a href="/forgot-password" class="text-primary-700 hover:underline dark:text-primary-500">Klik her</a>
             </div>
             <div class="flex items-center justify-between">
                 {#if isLoading}

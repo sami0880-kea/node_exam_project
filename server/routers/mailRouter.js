@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { Resend } from 'resend';
+
 const router = Router();
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 
-router.post('/send-email', async (req, res) => {
+router.post('/api/send-email', async (req, res) => {
     const { email, subject, message } = req.body;
 
     if (!email || !subject || !message) {
@@ -13,12 +14,24 @@ router.post('/send-email', async (req, res) => {
     }
 
     try {
-        await resend.emails.send({
-            from: 'Sam <contactform@samim.one>',
+        const { data, error } = await resend.emails.send({
+            from: 'LeasePortalen <contactform@samim.one>',
             to: [email],
             subject: subject,
-            text: message,
+            text: `Vi har modtaget din besked! Du vil høre fra os hurtigst muligt! \nEmne: ${subject} \nBesked: ${message}`,
         });
+
+        const { data2, error2 } = await resend.emails.send({
+            from: 'LeasePortalen <contactform@samim.one>',
+            to: ['leaseportalen@proton.me'],
+            subject: `Ny henvendelse! - ${subject} (${email})`,
+            text: `Fra: ${email} \nEmne: ${subject} \nBesked: ${message}`,
+        });
+        
+        
+        if (error || error2) {
+            return res.send({ data: "Could not send mail" });
+        }
 
         res.status(200).send({ data: "Email sent successfully" });
     } catch (error) {

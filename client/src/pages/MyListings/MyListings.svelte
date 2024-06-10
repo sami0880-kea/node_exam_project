@@ -60,7 +60,7 @@
             {/each}
         </div>
     {:else}
-        <p class="col-span-full text-black dark:text-white mt-2 text-center">Ingen biler fundet.</p>
+        <p class="col-span-full text-black dark:text-white mt-2 text-center">Du har ingen annoncer.</p>
     {/if}
 </div>
 

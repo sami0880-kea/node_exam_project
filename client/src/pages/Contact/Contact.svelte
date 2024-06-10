@@ -3,13 +3,13 @@
     import { user } from '../../stores/userStore.js';
     import { fly } from 'svelte/transition';
     import { X, Check } from 'lucide-svelte';
-  import { BASE_URL } from '../../stores/urlStore.js';
+    import { BASE_URL } from '../../stores/urlStore.js';
 
     $: currentUser = $user;
     
     let email = '';
-    let subject = 'Title';
-    let message = 'Hello there!';
+    let subject = 'Tilføje newton-meters til biler';
+    let message = 'Hej, jeg vil gerne spørge om det muligt for jer at tilføje newton meter til biler så man kan se hvor meget torque bilen har. Tak på forhånd!';
 
     let failToast = false;
     let successToast = false;

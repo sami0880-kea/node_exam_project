@@ -14,4 +14,5 @@ export default {
     listings: db.collection("listings"),
     messages: db.collection("messages"),
     conversations: db.collection("conversations"),
+    tokens: db.collection("tokens"),
 };
